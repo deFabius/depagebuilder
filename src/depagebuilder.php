@@ -55,11 +55,13 @@ add_action( 'edit_form_after_editor', 'fx_pbbase_editor_callback', 10, 2 );
 function dpb_before_editor()
 {
     ?>
-
-    <input class="toggle_button" type="checkbox" name="use_depagebuilder" id="depagebuilder_switch" />
-    <label for="depagebuilder_switch"><span class="switch"><span class="handle"></span></span>Use builder</label>
+    <div class="row depb_interface">
+        <input class="toggle_button" type="checkbox" name="use_depagebuilder" id="depagebuilder_switch" />
+        <label for="depagebuilder_switch"><span class="switch"><span class="handle"></span></span>Use builder</label>
+    </div>
     <?php
 }
 
 
 add_action( 'edit_form_after_title', 'dpb_before_editor', 10, 2 );
+

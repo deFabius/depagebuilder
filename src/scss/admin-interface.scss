@@ -1,63 +1,65 @@
+.row {
+    display: block;
+    margin-top: 20px;
+}
+
 input[type=checkbox].toggle_button {
     display: none;
 }
 
 .toggle_button + label {
     display: block;
-}
 
-.toggle_button + label > .switch {
-    display: inline-block;
-    width: 100px;
-    color: #555;
-    border-color: #ccc;
-    background: #f7f7f7;
-    -webkit-box-shadow: 0 1px 0 #ccc;
-    box-shadow: 0 1px 0 #ccc;
-    vertical-align: top;
-    margin-right: 5px;
-    margin-bottom: 4px;
-    padding-left: 7px;
-    padding-right: 7px;
-    text-decoration: none;
-    font-size: 13px;
-    line-height: 26px;
-    height: 28px;
-    margin: 0;
-    padding: 0 10px 1px;
-    cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    -webkit-appearance: none;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    white-space: nowrap;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    position: relative;
-    -webkit-transition: background-color .2s; /* Safari */
-    transition: background-color .2s;
-    background-color: red;
+    & > .switch {
+        display: inline-block;
+        width: 70px;
+        color: #555;
+        border-color: #ccc;
+        background: #f7f7f7;
+        -webkit-box-shadow: 0 1px 0 #ccc;
+        box-shadow: 0 1px 0 #ccc;
+        vertical-align: middle;
+        text-decoration: none;
+        font-size: 13px;
+        line-height: 26px;
+        height: 28px;
+        margin: 0;
+        margin-right: 5px;
+        padding: 0 10px 1px;
+        cursor: pointer;
+        border-width: 1px;
+        border-style: solid;
+        -webkit-appearance: none;
+        -webkit-border-radius: 3px;
+        border-radius: 3px;
+        white-space: nowrap;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        position: relative;
+        -webkit-transition: background-color .2s; /* Safari */
+        transition: background-color .2s;
+        background-color: red;
+
+        & > .handle {
+            display: inline-block;
+            height: 100%;
+            width: 50%;
+            position: absolute;
+            left: 0;
+            -webkit-border-radius: 3px;
+            border-radius: 2px;
+            background-color: #fff;
+            -webkit-transition: left .2s; /* Safari */
+            transition: left .2s;
+            font-family: fontawesome;
+            text-align: center;
+        }
+    }
 }
 
 .toggle_button:checked + label > .switch {
     background-color: green;
-}
-
-.toggle_button + label > .switch > .handle {
-    display: inline-block;
-    height: 100%;
-    width: 50px;
-    position: absolute;
-    left: 0;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    background-color: #ccc;
-    -webkit-transition: left .2s; /* Safari */
-    transition: left .2s;
-    font-family: fontawesome;
-    text-align: center;
 }
 
 .toggle_button + label > .switch > .handle:before {
