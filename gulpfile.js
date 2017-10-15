@@ -1,14 +1,15 @@
 var gulp = require('gulp');
+var sass = require('gulp-sass');
 
 var paths = {
     src: 'src/**/*',
     srcHTML: 'src/**/*.html',
-    srcCSS: 'src/**/*.css',
+    srcSCSS: 'src/scss/**/*.scss',
     srcJS: 'src/**/*.js',
     srcPHP: 'src/**/*.php',
     tmp: 'tmp',
     tmpIndex: 'tmp/index.html',
-    tmpCSS: 'tmp/**/*.css',
+    tmpCSS: 'tmp/css/**/*.css',
     tmpJS: 'tmp/**/*.js',
     tmpPHP: 'tmp/**/*.php',
     dist: 'dist',
@@ -29,4 +30,10 @@ gulp.task('php', function () {
 
 gulp.task('sandbox', function () {
     return gulp.src(paths.src).pipe(gulp.dest(paths.wpSandbox));
-})
+});
+
+gulp.task('sass', function(){
+    return gulp.src(paths.srcSCSS)
+      .pipe(sass()) // Using gulp-sass
+      .pipe(gulp.dest(paths.wpSandbox + '/css'))
+  });
