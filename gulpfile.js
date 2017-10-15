@@ -1,4 +1,7 @@
+// Change this constant to whatever virtual host you're using to develop wordpress
 var testUrl = 'http://www.sandbox01.wp';
+// Change to the dev wordpress plugin folder
+var wpPluginFolder = '/Users/MCUser/Sites/wp-sandbox/wp-content/plugins/depagebuilder';
 
 var gulp = require('gulp');
 var sass = require('gulp-sass');
@@ -20,7 +23,7 @@ var paths = {
     distCSS: 'dist/**/*.css',
     distJS: 'dist/**/*.js',
     distPHP: 'dist/**/*.php',
-    wpSandbox: '/Users/MCUser/Sites/wp-sandbox/wp-content/plugins/depagebuilder'
+    wpSandbox: wpPluginFolder
 };
 
 gulp.task('default', function () {
