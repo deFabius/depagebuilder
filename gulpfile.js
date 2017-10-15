@@ -1,5 +1,8 @@
+var testUrl = 'http://www.sandbox01.wp';
+
 var gulp = require('gulp');
 var sass = require('gulp-sass');
+var browserSync = require('browser-sync').create();
 
 var paths = {
     src: 'src/**/*',
@@ -29,11 +32,39 @@ gulp.task('php', function () {
 });
 
 gulp.task('sandbox', function () {
-    return gulp.src(paths.src).pipe(gulp.dest(paths.wpSandbox));
+    return gulp.src(paths.src)
+        .pipe(gulp.dest(paths.wpSandbox))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
 });
 
-gulp.task('sass', function(){
+gulp.task('sass', function () {
     return gulp.src(paths.srcSCSS)
-      .pipe(sass()) // Using gulp-sass
-      .pipe(gulp.dest(paths.wpSandbox + '/css'))
-  });
+        .pipe(sass()) // Using gulp-sass
+        .pipe(gulp.dest(paths.wpSandbox + '/css'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+
+gulp.task('default', ['browserSync', 'sass'], function () {
+    gulp.watch(paths.srcSCSS, ['sass']);
+    gulp.watch(paths.srcPHP, ['sandbox']).on('change', browserSync.reload);
+});
+
+gulp.task('browserSync', function () {
+    let files = [
+        paths.srcSCSS,
+        paths.srcPHP
+    ];
+    browserSync.init(files,
+        {
+            proxy: testUrl,
+            notify: false
+        });
+});
+
+gulp.task('reload', function () {
+    browserSync.reload()
+})
