@@ -20,8 +20,8 @@ function fx_pbbase_editor_callback($post)
         return;
     }
 ?>
-<div id="hac-page-builder">
-    <?php wp_nonce_field( "hacpb_nonce_action", "hacpb_nonce" ) ?>
+<div id="de-page-builder">
+    <?php wp_nonce_field( "depb_nonce_action", "depb_nonce" ) ?>
     <h1>Page Builder Placeholder.</h1>
     <div data-bind="foreach: {data: rows, as: 'row'}">
         <div class="row-container">
@@ -33,8 +33,8 @@ function fx_pbbase_editor_callback($post)
                     <div class="hero-text-content" contenteditable="true" data-bind="text: text">Text here</div>
                 </div>
             </div>
-            <input type='hidden' data-bind="value: text, attr: { 'name': '_hacpb[' + $index() + '][text]' }" />
-            <input type='hidden' data-bind="value: bg, attr: { 'name': '_hacpb[' + $index() + '][bg]' }" />
+            <input type='hidden' data-bind="value: text, attr: { 'name': '_depb[' + $index() + '][text]' }" />
+            <input type='hidden' data-bind="value: bg, attr: { 'name': '_depb[' + $index() + '][bg]' }" />
             <input type='button' class="button-primary" value="<?php esc_attr_e( 'Select a image', 'mytextdomain' ); ?>" data-bind="click: $parent.pickImage" />
         </div>
     </div>
@@ -43,8 +43,8 @@ function fx_pbbase_editor_callback($post)
 
 <script>
 jQuery(document).ready(function () {
-    var data = <?php echo json_encode(get_post_meta(get_the_ID(), '_hacpb', true)) ?>;
-    // ko.applyBindings(pageEditorApp(data), document.getElementById('hac-page-builder'));
+    var data = <?php echo json_encode(get_post_meta(get_the_ID(), '_depb', true)) ?>;
+    // ko.applyBindings(pageEditorApp(data), document.getElementById('de-page-builder'));
 });
 </script>
 <?php
