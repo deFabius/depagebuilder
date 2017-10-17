@@ -5,6 +5,8 @@ var wpPluginFolder = '/Users/MCUser/Sites/wp-sandbox/wp-content/plugins/depagebu
 
 var gulp = require('gulp');
 var sass = require('gulp-sass');
+const sourcemaps = require('gulp-sourcemaps');
+const autoprefixer = require('gulp-autoprefixer');
 var browserSync = require('browser-sync').create();
 
 var paths = {
@@ -45,6 +47,8 @@ gulp.task('sandbox', function () {
 gulp.task('sass', function () {
     return gulp.src(paths.srcSCSS)
         .pipe(sass()) // Using gulp-sass
+        .pipe(sourcemaps.init())
+        .pipe(autoprefixer())
         .pipe(gulp.dest(paths.wpSandbox + '/css'))
         .pipe(browserSync.reload({
             stream: true
