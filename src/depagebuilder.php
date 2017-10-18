@@ -44,7 +44,7 @@ function fx_pbbase_editor_callback($post)
 <script>
 jQuery(document).ready(function () {
     var data = <?php echo json_encode(get_post_meta(get_the_ID(), '_depb', true)) ?>;
-    // ko.applyBindings(pageEditorApp(data), document.getElementById('de-page-builder'));
+    ko.applyBindings(pageEditorApp(data), document.getElementById('de-page-builder'));
 });
 </script>
 <?php

@@ -67,3 +67,44 @@ input[type=checkbox].toggle_button {
 .toggle_button:checked + label {
     display: block;
 }
+
+.hero-content {
+    display: block;
+    width: 100%;
+    min-height: 400px;
+    margin-bottom: 10px;
+    border: 1px solid #e5e5e5;
+    box-sizing: border-box;
+    background-color: rgb(255,255,255);
+    background-size: cover;
+    background-position: center center;
+}
+
+.hero-text-container {
+    display: table;
+    min-height: 400px;
+    width: 100%;
+}
+
+.hero-text-content {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 18px;
+    color: white;
+    padding-left: 5%;
+    padding-right: 50%;
+    background-color: rgba(0,0,0,.5);
+}
+
+.row-container {
+    margin-bottom: 10px;
+}
+
+.page-builder-header{
+    border: 1px solid #e5e5e5;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    text-align: right;
+    background: #f5f5f5;
+    padding: 5px;
+}
