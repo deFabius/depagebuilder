@@ -12,9 +12,7 @@ define( 'MY_PLUGIN_PATH', plugins_url() . '/depagebuilder' );
 
 require_once(plugin_dir_path( __FILE__ ) . '/views/loader/res-loader.php');
 
-add_action( 'admin_enqueue_scripts', 'dpb_admin_scripts' );
-
-function fx_pbbase_editor_callback($post)
+function depb_editor_callback($post)
 {
     if ('page' !== $post->post_type) {
         return;
@@ -26,19 +24,27 @@ function fx_pbbase_editor_callback($post)
     <div data-bind="foreach: {data: rows, as: 'row'}">
         <div class="row-container">
             <header class="page-builder-header">
+                <div class="page-builder-interface">
+                    <button class="button fa fa-picture-o" data-bind="click: $parent.pickImage"></button>
+                    <button class="button fa fa-align-left" data-bind="click: $parent.align.bind($data, 'left')"></button>
+                    <button class="button fa fa-align-right" data-bind="click: $parent.align.bind($data, 'right')"></button>
+                    <button class="button fa fa-font" data-bind="colorPicker: fontColor"></button>
+                </div>
                 <button type="button" class="button fa fa-trash" data-bind="click: $parent.removeRow"></button>
             </header>
             <div class="hero-content" data-bind="style: { 'background-image': $parent.getBgImageCss(row) }">
                 <div class="hero-text-container">
-                    <div class="hero-text-content" contenteditable="true" data-bind="text: text">Text here</div>
+                    <div class="hero-text-content" contenteditable="true" data-bind="contentEditable: text, css: align, style: { color: fontColor() }">Text here</div>
                 </div>
             </div>
-            <input type='hidden' data-bind="value: text, attr: { 'name': '_depb[' + $index() + '][text]' }" />
-            <input type='hidden' data-bind="value: bg, attr: { 'name': '_depb[' + $index() + '][bg]' }" />
-            <input type='button' class="button-primary" value="<?php esc_attr_e( 'Select a image', 'mytextdomain' ); ?>" data-bind="click: $parent.pickImage" />
+            <input type="hidden" data-bind="value: text, attr: { 'name': '_depb[' + $index() + '][text]' }" />
+            <input type="hidden" data-bind="value: bg, attr: { 'name': '_depb[' + $index() + '][bg]' }" />
+            <input type="hidden" data-bind="value: align, attr: { 'name': '_depb[' + $index() + '][align]' }" />
+            <input type="hidden" data-bind="value: fontColor, attr: { 'name': '_depb[' + $index() + '][fontColor]' }" />
+            
         </div>
     </div>
-    <input type="button" class="button button-primary button-large" value="Add Row" data-bind="click: addRow" />
+    <input type="button" class="button button-primary button-large" value="Add Row" data-bind="click: addRow.bind(this, null)" />
 </div><!-- #fx-page-builder -->
 
 <script>
@@ -50,18 +56,66 @@ jQuery(document).ready(function () {
 <?php
 }
 
-add_action( 'edit_form_after_editor', 'fx_pbbase_editor_callback', 10, 2 );
-
-function dpb_before_editor()
+function depb_before_editor()
 {
+    $depSwitch = get_post_meta(get_the_ID(), 'use_depagebuilder', true);
+    echo $depSwitch;
     ?>
     <div class="row depb_interface">
-        <input class="toggle_button" type="checkbox" name="use_depagebuilder" id="depagebuilder_switch" />
+        <input class="toggle_button" type="checkbox" name="use_depagebuilder" id="depagebuilder_switch" value="true" />
         <label for="depagebuilder_switch"><span class="switch"><span class="handle"></span></span>Use builder</label>
+        <input type="hidden" name="use_depagebuilder" value="false" />
     </div>
     <?php
 }
 
+/**
+* Save Page Builder Data When Saving Page
+* @since 1.0.0
+*/
+function depb_pbbase_save_post($post_id, $post)
+{
 
-add_action( 'edit_form_after_title', 'dpb_before_editor', 10, 2 );
+   /* Stripslashes Submitted Data */
+    $request = stripslashes_deep( $_POST );
 
+   /* Verify/validate */
+    if (! isset( $request['depb_nonce'] ) || ! wp_verify_nonce( $request['depb_nonce'], 'depb_nonce_action' )) {
+        return $post_id;
+    }
+   /* Do not save on autosave */
+    if (defined('DOING_AUTOSAVE' ) && DOING_AUTOSAVE) {
+        return $post_id;
+    }
+   /* Check post type and user caps. */
+    $post_type = get_post_type_object( $post->post_type );
+    if ('page' != $post->post_type || !current_user_can( $post_type->cap->edit_post, $post_id )) {
+        return $post_id;
+    }
+
+    save_or_update($post_id, "_depb", $request);
+    save_or_update($post_id, "use_depagebuilder", $request);
+}
+
+function save_or_update($post_id, $meta_key, $request)
+{
+    /* Get (old) saved page builder data */
+    $saved_data = get_post_meta( $post_id, $meta_key, true );
+    /* Get new submitted data and sanitize it. */
+    $submitted_data = isset( $request[$meta_key] ) ? $request[$meta_key] : null;
+    /* New data submitted, No previous data, create it  */
+    if ($submitted_data && '' == $saved_data) {
+        add_post_meta( $post_id, $meta_key, $submitted_data, true );
+    } /* New data submitted, but it's different data than previously stored data, update it */
+    elseif ($submitted_data && ( $submitted_data != $saved_data )) {
+        update_post_meta( $post_id, $meta_key, $submitted_data );
+    } /* New data submitted is empty, but there's old data available, delete it. */
+    elseif (empty( $submitted_data ) && $saved_data) {
+        delete_post_meta( $post_id, $meta_key );
+    }
+}
+
+add_action( 'admin_enqueue_scripts', 'depb_admin_scripts' );
+add_action( 'edit_form_after_editor', 'depb_editor_callback' );
+add_action( 'edit_form_after_title', 'depb_before_editor' );
+add_action( 'save_post', 'depb_pbbase_save_post', 10, 2 );

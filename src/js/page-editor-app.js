@@ -6,12 +6,16 @@ function pageEditorApp(data) {
     self.addRow = function (data) {
         var obj = {
             text: ko.observable(),
-            bg: ko.observable()
+            bg: ko.observable(),
+            align: ko.observable('left'),
+            fontColor: ko.observable('ffffff')
         };
 
         if (data) {
             obj.text(data.text);
             obj.bg(data.bg);
+            obj.align(data.align);
+            obj.fontColor(data.fontColor);
         }
 
         self.rows.push(obj);
@@ -61,6 +65,9 @@ function pageEditorApp(data) {
         image_frame.open();
     };
 
+    self.align = function(align) {
+        this.align(align);
+    };
 
     return self;
 }

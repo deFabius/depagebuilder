@@ -91,9 +91,17 @@ input[type=checkbox].toggle_button {
     vertical-align: middle;
     font-size: 18px;
     color: white;
-    padding-left: 5%;
-    padding-right: 50%;
     background-color: rgba(0,0,0,.5);
+    &.left {
+        padding-left: 5%;
+        padding-right: 50%;
+        text-align: left;
+    }
+    &.right {
+        padding-left: 50%;
+        padding-right: 5%;
+        text-align: right;     
+    }
 }
 
 .row-container {
@@ -104,7 +112,31 @@ input[type=checkbox].toggle_button {
     border: 1px solid #e5e5e5;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    text-align: right;
     background: #f5f5f5;
     padding: 5px;
+}
+
+.page-builder-interface {
+    display: inline-block;
+    text-align: left;
+}
+
+.fa-trash {
+    float: right;
+}
+
+.button {
+    position: relative;
+}
+
+.color-sample {
+    display: inline-block;
+    height: 4px;
+    width: 60%;
+    margin: 0 auto;
+    position: absolute;
+    bottom: 1px;
+    left: 20%;
+    border: none;
+    color: transparent;
 }
