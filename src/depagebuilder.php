@@ -62,9 +62,9 @@ function depb_before_editor()
     echo $depSwitch;
     ?>
     <div class="row depb_interface">
-        <input class="toggle_button" type="checkbox" name="use_depagebuilder" id="depagebuilder_switch" value="true" />
-        <label for="depagebuilder_switch"><span class="switch"><span class="handle"></span></span>Use builder</label>
         <input type="hidden" name="use_depagebuilder" value="false" />
+        <input class="toggle_button" type="checkbox" name="use_depagebuilder" id="depagebuilder_switch" value="true" <?php if (get_post_meta(get_the_ID(), 'use_depagebuilder', true) == "true") { echo "checked=\"checked\""; } ?>/>
+        <label for="depagebuilder_switch"><span class="switch"><span class="handle"></span></span>Use builder</label>
     </div>
     <?php
 }
@@ -95,6 +95,22 @@ function depb_pbbase_save_post($post_id, $post)
 
     save_or_update($post_id, "_depb", $request);
     save_or_update($post_id, "use_depagebuilder", $request);
+
+    $post_content = generate_content($request);
+
+    /* Post Data To Save */
+    $this_post = array(
+        'ID'           => $post_id,
+        'post_content' => sanitize_post_field( 'post_content', $post_content, $post_id, 'db' ),
+    );
+    
+    /**
+     * Prevent infinite loop.
+     * @link https://developer.wordpress.org/reference/functions/wp_update_post/
+     */
+    remove_action( 'save_post', 'depb_pbbase_save_post' );
+    wp_update_post( $this_post );
+    add_action( 'save_post', 'depb_pbbase_save_post' );
 }
 
 function save_or_update($post_id, $meta_key, $request)
@@ -119,3 +135,16 @@ add_action( 'admin_enqueue_scripts', 'depb_admin_scripts' );
 add_action( 'edit_form_after_editor', 'depb_editor_callback' );
 add_action( 'edit_form_after_title', 'depb_before_editor' );
 add_action( 'save_post', 'depb_pbbase_save_post', 10, 2 );
+
+function generate_content($request) {
+    $submitted_data = isset( $request["_depb"] ) ? $request["_depb"] : null;
+    $generated = "";
+
+    foreach($submitted_data as $row) {
+        ob_start(); ?>
+        <article><?=$row["text"]?></article>
+        <?php $generated .= ob_get_clean();
+    }
+
+    return $generated;
+}
