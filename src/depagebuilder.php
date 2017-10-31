@@ -142,7 +142,11 @@ function generate_content($request) {
 
     foreach($submitted_data as $row) {
         ob_start(); ?>
-        <article><?=$row["text"]?></article>
+        <div class="hero-content" style="background-image: url(<?=$row["bg"]?>)">
+            <div class="hero-text-container">
+                <div class="hero-text-content" style="text-align: <?=$row["align"]?>; color: <?=$row["fontColor"]?>"><?=$row["text"]?></div>
+            </div>
+        </div>
         <?php $generated .= ob_get_clean();
     }
 
