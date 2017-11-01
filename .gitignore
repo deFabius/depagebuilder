@@ -22,3 +22,8 @@ wp-content/plugins/hello.php
 .DS_Store
 .vscode
 
+/css
+/js
+/scss
+/views
+depagebuilder.php
