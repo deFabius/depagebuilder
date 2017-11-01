@@ -18,33 +18,15 @@ function depb_editor_callback($post)
         return;
     }
 ?>
-<div id="de-page-builder">
+<?php echo file_get_contents(plugin_dir_path( __FILE__ ) . '/views/widgets/admin/dpb-hero.php'); ?>
+<?php echo file_get_contents(plugin_dir_path( __FILE__ ) . '/views/widgets/admin/dpb-slideshow.php'); ?>
+<div id="de-page-builder" data>
     <?php wp_nonce_field( "depb_nonce_action", "depb_nonce" ) ?>
     <h1>Page Builder Placeholder.</h1>
-    <div data-bind="foreach: {data: rows, as: 'row'}">
-        <div class="row-container">
-            <header class="page-builder-header">
-                <div class="page-builder-interface">
-                    <button class="button fa fa-picture-o" data-bind="click: $parent.pickImage"></button>
-                    <button class="button fa fa-align-left" data-bind="click: $parent.align.bind($data, 'left')"></button>
-                    <button class="button fa fa-align-right" data-bind="click: $parent.align.bind($data, 'right')"></button>
-                    <button class="button fa fa-font" data-bind="colorPicker: fontColor"></button>
-                </div>
-                <button type="button" class="button fa fa-trash" data-bind="click: $parent.removeRow"></button>
-            </header>
-            <div class="hero-content" data-bind="style: { 'background-image': $parent.getBgImageCss(row) }">
-                <div class="hero-text-container">
-                    <div class="hero-text-content" contenteditable="true" data-bind="contentEditable: text, css: align, style: { color: fontColor() }">Text here</div>
-                </div>
-            </div>
-            <input type="hidden" data-bind="value: text, attr: { 'name': '_depb[' + $index() + '][text]' }" />
-            <input type="hidden" data-bind="value: bg, attr: { 'name': '_depb[' + $index() + '][bg]' }" />
-            <input type="hidden" data-bind="value: align, attr: { 'name': '_depb[' + $index() + '][align]' }" />
-            <input type="hidden" data-bind="value: fontColor, attr: { 'name': '_depb[' + $index() + '][fontColor]' }" />
-            
-        </div>
+    <div data-bind="template: {name: getTemplate, foreach: rows, as: 'row'}">
     </div>
-    <input type="button" class="button button-primary button-large" value="Add Row" data-bind="click: addRow.bind(this, null)" />
+    <input type="button" class="button button-primary button-large" value="Add Hero" data-bind="click: addRow.bind(this, {type: 'dpb-hero'})" />
+    <input type="button" class="button button-primary button-large" value="Add Slideshow" data-bind="click: addRow.bind(this, {type: 'dpb-slideshow'})" />
 </div><!-- #fx-page-builder -->
 
 <script>
@@ -59,7 +41,6 @@ jQuery(document).ready(function () {
 function depb_before_editor()
 {
     $depSwitch = get_post_meta(get_the_ID(), 'use_depagebuilder', true);
-    echo $depSwitch;
     ?>
     <div class="row depb_interface">
         <input type="hidden" name="use_depagebuilder" value="false" />

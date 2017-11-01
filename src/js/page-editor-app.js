@@ -8,17 +8,22 @@ function pageEditorApp(data) {
             text: ko.observable(),
             bg: ko.observable(),
             align: ko.observable('left'),
-            fontColor: ko.observable('ffffff')
+            fontColor: ko.observable('ffffff'),
+            type: data.type
         };
 
         if (data) {
             obj.text(data.text);
             obj.bg(data.bg);
-            obj.align(data.align);
+            obj.align(data.align || 'left');
             obj.fontColor(data.fontColor);
         }
 
         self.rows.push(obj);
+    }
+
+    self.getTemplate = function (item) {
+        return item.type;
     }
 
     for (var i = 0; i < data.length; i++) {
@@ -27,10 +32,6 @@ function pageEditorApp(data) {
 
     self.removeRow = function (row) {
         self.rows.remove(row);
-    }
-
-    self.getBgImageCss = function (rowData) {
-        return 'url(' + rowData.bg() + ')';
     }
 
     self.pickImage = function (imageVM) {
