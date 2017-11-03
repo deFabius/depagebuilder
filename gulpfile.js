@@ -84,6 +84,6 @@ gulp.task('build', function() {
         .pipe(autoprefixer())
         .pipe(gulp.dest(paths.distCSS));
 
-    gulp.src([paths.srcPHP, paths.srcJS])
+    gulp.src([paths.srcPHP, paths.srcJS, "package.json"])
         .pipe(gulp.dest(paths.dist));
 });
