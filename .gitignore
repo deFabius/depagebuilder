@@ -26,4 +26,4 @@ wp-content/plugins/hello.php
 /js
 /scss
 /views
-depagebuilder.php
+./depagebuilder.php
