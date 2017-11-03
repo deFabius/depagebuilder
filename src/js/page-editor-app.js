@@ -94,8 +94,10 @@ jQuery(document).ready(function ($) {
 jQuery(document).ready(function ($) {
 
     /* Editor Toggle Function */
-    function fxPb_Editor_Toggle() {
-        if ($('#depagebuilder_switch').is(":checked")) {
+    function fxPb_Editor_Toggle(ignoreCheckbox) {
+        var isActive = ignoreCheckbox || $('#depagebuilder_switch').is(":checked");
+            
+        if (isActive) {
             $('#postdivrich').hide();
             $('#de-page-builder').show();
         }
@@ -106,7 +108,7 @@ jQuery(document).ready(function ($) {
     }
 
     /* Toggle On Page Load */
-    fxPb_Editor_Toggle();
+    fxPb_Editor_Toggle($('input[type=hidden][name=use_depagebuilder]').val() == 'true');
 
     /* If user change page template drop down */
     $("#depagebuilder_switch").change(function (e) {

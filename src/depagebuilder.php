@@ -40,14 +40,20 @@ jQuery(document).ready(function () {
 
 function depb_before_editor()
 {
-    $depSwitch = get_post_meta(get_the_ID(), 'use_depagebuilder', true);
-    ?>
-    <div class="row depb_interface">
-        <input type="hidden" name="use_depagebuilder" value="false" />
-        <input class="toggle_button" type="checkbox" name="use_depagebuilder" id="depagebuilder_switch" value="true" <?php if (get_post_meta(get_the_ID(), 'use_depagebuilder', true) == "true") { echo "checked=\"checked\""; } ?>/>
-        <label for="depagebuilder_switch"><span class="switch"><span class="handle"></span></span>Use builder</label>
-    </div>
+    if (get_page_by_title("Home Page")->ID == get_the_ID()) {
+        ?>
+        <input type="hidden" name="use_depagebuilder" value="true" />
+        <?php
+    } else {
+        $depSwitch = get_post_meta(get_the_ID(), 'use_depagebuilder', true);
+        ?>
+        <div class="row depb_interface">
+            <input type="hidden" name="use_depagebuilder" value="false" />
+            <input class="toggle_button" type="checkbox" name="use_depagebuilder" id="depagebuilder_switch" value="true" <?php if ($depSwitch == "true") { echo "checked=\"checked\""; } ?>/>
+            <label for="depagebuilder_switch"><span class="switch"><span class="handle"></span></span>Use builder</label>
+        </div>
     <?php
+    }
 }
 
 /**
