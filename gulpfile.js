@@ -1,5 +1,5 @@
 // Change this constant to whatever virtual host you're using to develop wordpress
-var testUrl = 'http://www.sandbox01.wp';
+var testUrl = 'http://www.sandbox01.wp/wp-admin';
 // Change to the dev wordpress plugin folder
 var wpPluginFolder = '/Users/MCUser/Sites/wp-sandbox/wp-content/plugins/depagebuilder';
 
@@ -22,9 +22,9 @@ var paths = {
     tmpPHP: 'tmp/**/*.php',
     dist: 'dist',
     distIndex: 'dist/index.html',
-    distCSS: 'dist/**/*.css',
-    distJS: 'dist/**/*.js',
-    distPHP: 'dist/**/*.php',
+    distCSS: 'dist/css',
+    distJS: 'dist/js',
+    distPHP: 'dist',
     wpSandbox: wpPluginFolder
 };
 
@@ -75,4 +75,15 @@ gulp.task('browserSync', function () {
 
 gulp.task('reload', function () {
     browserSync.reload()
-})
+});
+
+gulp.task('build', function() {
+    gulp.src(paths.srcSCSS)
+        .pipe(sass()) // Using gulp-sass
+        .pipe(sourcemaps.init())
+        .pipe(autoprefixer())
+        .pipe(gulp.dest(paths.distCSS));
+
+    gulp.src([paths.srcPHP, paths.srcJS])
+        .pipe(gulp.dest(paths.dist));
+});
