@@ -1,6 +1,6 @@
 {
   "name": "wp-page-builder",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is a WYSIWYG page builder plugin for wordpress",
   "main": "index.js",
   "scripts": {
