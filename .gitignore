@@ -18,7 +18,6 @@ wp-content/plugins/hello.php
 
 /node_modules
 /tmp
-/dist
 .DS_Store
 .vscode
 
