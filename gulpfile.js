@@ -1,8 +1,9 @@
 // Change this constant to whatever virtual host you're using to develop wordpress
-var testUrl = 'http://www.sandbox01.wp';
+var testUrl = 'http://www.sandbox01.wp/wp-admin';
 // Change to the dev wordpress plugin folder
 var wpPluginFolder = '/Users/MCUser/Sites/wp-sandbox/wp-content/plugins/depagebuilder';
 
+var fs = require('fs');
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
@@ -22,9 +23,9 @@ var paths = {
     tmpPHP: 'tmp/**/*.php',
     dist: 'dist',
     distIndex: 'dist/index.html',
-    distCSS: 'dist/**/*.css',
-    distJS: 'dist/**/*.js',
-    distPHP: 'dist/**/*.php',
+    distCSS: 'dist/css',
+    distJS: 'dist/js',
+    distPHP: 'dist',
     wpSandbox: wpPluginFolder
 };
 
@@ -75,4 +76,53 @@ gulp.task('browserSync', function () {
 
 gulp.task('reload', function () {
     browserSync.reload()
-})
+});
+
+gulp.task('build', ['update-package-version'], function () {
+    gulp.src(paths.srcSCSS)
+        .pipe(sass()) // Using gulp-sass
+        .pipe(sourcemaps.init())
+        .pipe(autoprefixer())
+        .pipe(gulp.dest(paths.distCSS));
+
+    gulp.src([paths.srcPHP, paths.srcJS, "package.json"])
+        .pipe(gulp.dest(paths.dist));
+});
+
+gulp.task('update-package-version', function () {
+
+    fs.readFile('./package.json', 'utf8', function (err, data) {
+        if (err) {
+            return console.log(err);
+        }
+
+        fs.writeFile('./package.old.json', data, function (err) {
+            if (err) {
+                return console.log('Backup failed:', err);
+            }
+
+            var versionRegEx = /(\"version\":\s\")([0-9\.]*)/;
+
+            var version = versionRegEx.exec(data)[2].split('.');
+
+            switch (process.argv[process.argv.length - 1]) {
+                case '-V':
+                    version[0]++;
+                    break;
+                case '-M':
+                    version[1]++;
+                    break;
+                default:
+                    version[2]++;
+            }
+
+            fs.writeFile('./package.json', data.replace(versionRegEx, '$1' + version.join('.')), function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                console.log("Version updated!");
+            });
+        });
+    });
+});
