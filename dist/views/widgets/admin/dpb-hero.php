@@ -1,7 +1,7 @@
 <script type="text/html" id="dpb-hero">
     <header class="page-builder-header">
         <div class="page-builder-interface">
-            <button class="button fa fa-picture-o" data-bind="click: $parent.pickImage"></button>
+            <button class="button fa fa-picture-o" data-bind="click: pickImage"></button>
             <button class="button fa fa-align-left" data-bind="click: $parent.align.bind($data, 'left')"></button>
             <button class="button fa fa-align-right" data-bind="click: $parent.align.bind($data, 'right')"></button>
             <button class="button fa fa-font" data-bind="colorPicker: fontColor"></button>
