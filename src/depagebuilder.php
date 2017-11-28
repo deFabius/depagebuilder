@@ -25,3 +25,5 @@ add_action( 'edit_form_after_title', 'depb_before_editor' );
  * Edit data hooks
  */
 add_action( 'save_post', 'depb_pbbase_save_post', 10, 2 );
+
+remove_filter ('the_content', 'wpautop'); 
