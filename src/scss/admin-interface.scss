@@ -1,5 +1,9 @@
 @import "colors.scss";
 
+html, body {
+    height: 100%;
+}
+
 .row {
     display: block;
     margin-top: 20px;
@@ -91,17 +95,35 @@ input[type=checkbox].toggle_button {
     vertical-align: middle;
     font-size: 18px;
     color: white;
-    background-color: rgba(0,0,0,.5);
     &.left {
         padding-left: 5%;
         padding-right: 50%;
-        text-align: left;
+        text-align: center;
+    }
+    &.center {
+        padding-left: 30%;
+        padding-right: 30%;
+        text-align: center;
     }
     &.right {
         padding-left: 50%;
         padding-right: 5%;
-        text-align: right;     
+        text-align: center;
     }
+}
+
+.slideshow-content {
+    a {
+        color: inherit;
+    }
+}
+
+.slideshow-interface {
+    display: block;
+}
+
+input.slideshow-interface, textarea.slideshow-interface {
+    width: 100%;
 }
 
 .row-container {
@@ -139,4 +161,12 @@ input[type=checkbox].toggle_button {
     left: 20%;
     border: none;
     color: transparent;
+}
+
+.btn {
+    display: inline-block;
+    padding: 1em 2em;
+    border: 1px solid white;
+    margin: 1em;
+    text-decoration: none;
 }
