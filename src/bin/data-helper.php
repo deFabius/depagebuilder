@@ -72,13 +72,47 @@ function generate_content($request) {
     $generated = "";
 
     foreach($submitted_data as $row) {
-        ob_start(); ?>
-        <div class="hero-content" style="background-image: url(<?=$row["bg"]?>)">
-            <div class="hero-text-container">
-                <div class="hero-text-content" style="text-align: <?=$row["align"]?>; color: <?=$row["fontColor"]?>"><?=$row["text"]?></div>
-            </div>
-        </div>
-        <?php $generated .= ob_get_clean();
+        echo $row["type"];
+        ob_start();
+        switch ($row["type"]) {
+            case "dpb-hero":
+                ?>
+                <div class="hero-content" style="background-image: url(<?=$row["bg"]?>)">
+                    <div class="hero-text-container">
+                        <div class="hero-text-content" style="text-align: <?=$row["align"]?>; color: <?=$row["fontColor"]?>"><?=$row["text"]?></div>
+                    </div>
+                </div>
+                <?php 
+                break;
+            case "dpb-slideshow":
+                $pictures = json_decode($row["pictures"]);
+                ?>
+                <div class="slideshow">
+                    <div class="slideshow-content" style="width: <?= count($pictures) * 100 ?>%">
+                    <?php
+                    foreach($pictures as $pic) {
+                        ?>
+                            <div class="slideshow-slide" style="background-image: url(<?=$pic->full->url ?>); width: <?= (100 / count($pictures)) ?>%">
+                                <div class="slideshow-slide-content <?= isset($pic->align) ? $pic->align : "left" ?>" style="color: <?=$pic->fontColor ?>">
+                                    <div class="slideshow-slide-content-text"><?=isset($pic->text) ? $pic->text : "" ?></div>
+                                    <?php if (isset($pic->link)) { ?>
+                                    <a class="btn" href="<?=$pic->link ?>" style="border-color: <?=isset($pic->fontColor) ? $pic->fontColor : "" ?>"><?=$pic->linkLabel ?></a>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        <?php
+                    }
+                    ?>
+                    </div>
+                    <div class="slideshow-interface">
+                        <i class="fa fa-chevron-left slideshow-left" aria-hidden="true"></i>
+                        <i class="fa fa-chevron-right slideshow-right" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <?php
+                break;
+        }
+        $generated .= ob_get_clean();
     }
 
     return $generated;
