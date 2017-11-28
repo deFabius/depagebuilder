@@ -1,23 +1,146 @@
+function WidgetHero() {
+    var self = this;
+    this.text = ko.observable();
+    this.bg = ko.observable();
+    this.align = ko.observable('left');
+    this.fontColor = ko.observable('ffffff');
+    this.type = 'dpb-hero';
+
+    this.populate = function (data) {
+        if (data) {
+            this.text(data.text);
+            this.bg(data.bg);
+            this.align(data.align || 'left');
+            this.fontColor(data.fontColor);
+        }
+    }
+
+    this.pickImage = function (imageVM) {
+        var image_frame;
+        if (image_frame) {
+            image_frame.open();
+        }
+        // Define image_frame as wp.media object
+        image_frame = wp.media({
+            title: 'Select Media',
+            multiple: false,
+            library: {
+                type: 'image',
+            }
+        });
+
+        image_frame.on('close', function () {
+            // On close, get selections and save to the hidden input
+            // plus other AJAX stuff to refresh the image preview
+            var selection = image_frame.state().get('selection');
+            if (selection.length === 0) return;
+            var image = selection.first().attributes.url;
+            self.bg(image);
+        });
+
+        image_frame.on('open', function () {
+            // On open, get the id from the hidden input
+            // and select the appropiate images in the media manage
+
+        });
+
+        image_frame.open();
+    };
+}
+
+function SlideShow() {
+    var self = this;
+    this.type = 'dpb-slideshow';
+    this.pictures = ko.observableArray([]);
+    this.selectedPic = ko.observable();
+
+    this.populate = function(data) {
+        var pictures = data.pictures ? JSON.parse(data.pictures).map(function(model) {
+            return {
+                full: model.full,
+                large: model.large,
+                medium: model.medium,
+                thumbnail: model.thumbnail,
+                text: ko.observable(model.text),
+                align: ko.observable(model.align),
+                link: ko.observable(model.link),
+                linkLabel: ko.observable(model.linkLabel),
+                fontColor: ko.observable(model.fontColor)
+            }
+        }) : [];
+        if (data) {
+            self.pictures(pictures);
+            self.selectedPic(pictures[0] || null);
+        }
+    }
+
+    this.showDetails = function(pic) {
+        self.selectedPic(pic);
+    }
+
+    this.align = function (align, image) {
+        image.align(align);
+    };
+
+    this.pickImage = function (imageVM) {
+        var image_frame;
+        if (image_frame) {
+            image_frame.open();
+        }
+        // Define image_frame as wp.media object
+        image_frame = wp.media({
+            title: 'Select Media',
+            multiple: true,
+            library: {
+                type: 'image',
+            }
+        });
+
+        image_frame.on('close', function () {
+            // On close, get selections and save to the hidden input
+            // plus other AJAX stuff to refresh the image preview
+            var selection = image_frame.state().get('selection');
+            if (selection.length === 0) return;
+            self.pictures(selection.map(function(model) { 
+                var obj = model.attributes.sizes;
+                obj.text = ko.observable();
+                obj.align = ko.observable('left');
+                obj.fontColor = ko.observable('#000000');
+                obj.link = ko.observable('');
+                obj.linkLabel = ko.observable('');
+                return obj;
+            }));
+            self.selectedPic(self.pictures()[0]);
+        });
+
+        image_frame.on('open', function () {
+            // On open, get the id from the hidden input
+            // and select the appropiate images in the media manage
+
+        });
+
+        image_frame.open();
+    };
+}
+
 function pageEditorApp(data) {
     var self = this;
 
     self.rows = ko.observableArray();
 
     self.addRow = function (data) {
-        var obj = {
-            text: ko.observable(),
-            bg: ko.observable(),
-            align: ko.observable('left'),
-            fontColor: ko.observable('ffffff'),
-            type: data.type
-        };
+        var obj;
 
-        if (data) {
-            obj.text(data.text);
-            obj.bg(data.bg);
-            obj.align(data.align || 'left');
-            obj.fontColor(data.fontColor);
+        switch (data.type) {
+            case 'dpb-hero':
+                obj = new WidgetHero();
+                break;
+            case 'dpb-slideshow':
+                obj = new SlideShow();
+                break;
         }
+
+        obj.populate(data);
 
         self.rows.push(obj);
     }
@@ -34,7 +157,7 @@ function pageEditorApp(data) {
         self.rows.remove(row);
     }
 
-    self.pickImage = function (imageVM) {
+    self.pickImage = function (imageVM, isMultiple) {
         var image_frame;
         if (image_frame) {
             image_frame.open();
@@ -42,7 +165,7 @@ function pageEditorApp(data) {
         // Define image_frame as wp.media object
         image_frame = wp.media({
             title: 'Select Media',
-            multiple: false,
+            multiple: isMultiple,
             library: {
                 type: 'image',
             }
@@ -66,7 +189,7 @@ function pageEditorApp(data) {
         image_frame.open();
     };
 
-    self.align = function(align) {
+    self.align = function (align) {
         this.align(align);
     };
 
@@ -96,7 +219,7 @@ jQuery(document).ready(function ($) {
     /* Editor Toggle Function */
     function fxPb_Editor_Toggle(ignoreCheckbox) {
         var isActive = ignoreCheckbox || $('#depagebuilder_switch').is(":checked");
-            
+
         if (isActive) {
             $('#postdivrich').hide();
             $('#de-page-builder').show();
